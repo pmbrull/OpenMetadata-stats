@@ -4,6 +4,7 @@ to handle Github API calls
 """
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import requests
 
@@ -27,12 +28,15 @@ def get(path: Path):
     return requests.get(url(path), headers=HEADER)
 
 
-def get_all(path: Path):
+def get_all(path: Path, option: Optional[str] = None):
     """
     Return all pages from a given request
     """
     root = url(path)
-    req = root + "?simple=yes&per_page=100&page=1"
+
+    option_str = option if option else ""
+
+    req = root + "?simple=yes&per_page=100&page=1" + option_str
     print(req)
 
     res = requests.get(req, headers=HEADER)
