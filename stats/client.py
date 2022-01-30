@@ -2,17 +2,26 @@
 Module containing helper utilities
 to handle Github API calls
 """
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
 import requests
+import streamlit as st
 
 
 ROOT = Path("api.github.com")
 OWNER = "open-metadata"
 REPO = "OpenMetadata"
-HEADER = {"Accept": "application/vnd.github.v3.star+json"}
+
+TOKEN = os.environ.get("API_TOKEN") or st.secrets["API_TOKEN"]
+
+HEADER = {
+    "Accept": "application/vnd.github.v3.star+json",
+    "Authorization": f"token {TOKEN}"
+
+}
 
 START_DATE = datetime.strptime("Aug 1 2021", "%b %d %Y")
 

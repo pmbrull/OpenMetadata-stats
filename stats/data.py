@@ -10,9 +10,12 @@ import pandas as pd
 from dateutil import parser
 from pandas import DataFrame
 
+import streamlit as st
+
 from stats.client import START_DATE, get_all, OWNER, REPO, ROOT, get
 
 
+@st.experimental_memo
 def stars_data() -> Optional[DataFrame]:
     """
     Extract information from stargazers.
@@ -50,6 +53,7 @@ def stars_data() -> Optional[DataFrame]:
         return None
 
 
+@st.experimental_memo
 def health_data() -> Tuple[str, str]:
     """
     Obtain the health % from the community profile
@@ -79,6 +83,7 @@ def is_good_first_issue(issue: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]
     return None
 
 
+@st.experimental_memo
 def good_first_issues_data() -> Tuple[List[dict], List[dict]]:
     """
     Analyze issues data for open and closed good

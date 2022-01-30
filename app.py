@@ -3,7 +3,7 @@ Main file to run the streamlit app
 """
 import streamlit as st
 
-from stats.components import stars_component, profile_component, good_first_issues
+from stats.components import stars_component, profile_component, good_first_issues, clear_cache_button
 
 
 def stats():
@@ -13,6 +13,8 @@ def stats():
     stars_component()
     st.markdown("---")
     good_first_issues()
+    st.markdown("---")
+    clear_cache_button()
 
 
 if __name__ == "__main__":

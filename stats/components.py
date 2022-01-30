@@ -61,3 +61,17 @@ def good_first_issues():
         open_issues, closed_issues, url_issues = st.columns(3)
         open_issues.metric("Open good first issues", len(open_gfi))
         closed_issues.metric("Closed good first issues", len(closed_gfi))
+
+
+def clear_cache_button():
+    """
+    Prepare a button to clear the cached API values
+    """
+
+    with st.container():
+
+        desc, button = st.columns(2)
+        desc.write("Clear the cache to refresh the data. It may take a few seconds.")
+
+        if button.button("Clear cache"):
+            st.experimental_memo.clear()
