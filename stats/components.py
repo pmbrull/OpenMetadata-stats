@@ -3,6 +3,7 @@ Module creating the different streamlit
 components to show on the app
 """
 import streamlit as st
+import altair as alt
 
 from stats.data import stars_data, health_data, good_first_issues_data
 
@@ -12,7 +13,7 @@ def stars_component():
     Prepare the graph to show the stars evolution
     and the differences
     """
-    df = stars_data()
+    df = stars_data().reset_index(level=0)
 
     if df is not None and not df.empty:
         current = int(df.iloc[-1].get("stars"))
@@ -26,7 +27,18 @@ def stars_component():
     with st.container():
 
         st.subheader("Stars evolution")
-        st.line_chart(df)
+        # st.line_chart(df)
+        print(df)
+        line_chart = alt.Chart(df).mark_line().encode(
+            x=alt.X('date:T', axis=alt.Axis(tickCount=12, grid=False)),
+            y="stars:Q",
+            color=alt.value("#7147E8")
+        ).properties(
+            width=650,
+            height=350,
+        )
+
+        st.altair_chart(line_chart)
 
         star_current, star_weekly, star_monthly = st.columns(3)
         star_current.metric("Current stars", current)
