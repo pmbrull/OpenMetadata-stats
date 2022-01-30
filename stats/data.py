@@ -102,3 +102,34 @@ def good_first_issues_data() -> Tuple[List[dict], List[dict]]:
     ]
 
     return open_first_issues, closed_first_issues
+
+
+@st.experimental_memo
+def contributors_data():
+    """
+    Get all project contributors.
+
+    Return them sorted by contributions
+    """
+
+    data = get_all(ROOT / "repos" / OWNER / REPO / "contributors")
+    sorted_contrib = sorted(data, key=lambda d: d["contributions"], reverse=True)
+
+    df = pd.DataFrame(sorted_contrib)
+
+    # df.reset_index(inplace=True)
+    # df.set_index("index", drop=False, inplace=True)
+
+    return df
+
+
+@st.experimental_memo
+def traffic_data():
+    """
+    Cook traffic data and views
+    for the last 14 days
+    """
+    clones = get_all(ROOT / "repos" / OWNER / REPO / "traffic" / "clones").get("uniques")
+    views = get_all(ROOT / "repos" / OWNER / REPO / "traffic" / "views", option="&per=week").get("uniques")
+
+    return clones, views

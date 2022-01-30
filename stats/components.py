@@ -5,7 +5,19 @@ components to show on the app
 import altair as alt
 import streamlit as st
 
-from stats.data import good_first_issues_data, health_data, stars_data
+from dataclasses import dataclass
+
+from stats.data import (
+    contributors_data,
+    good_first_issues_data,
+    health_data,
+    stars_data, traffic_data,
+)
+
+
+@dataclass
+class Style:
+    primaryColor: str = "#7147E8"
 
 
 def stars_component():
@@ -27,15 +39,14 @@ def stars_component():
     with st.container():
 
         st.subheader("Stars evolution")
-        # st.line_chart(df)
-        print(df)
+
         line_chart = (
             alt.Chart(df)
             .mark_line()
             .encode(
                 x=alt.X("date:T", axis=alt.Axis(tickCount=12, grid=False)),
                 y="stars:Q",
-                color=alt.value("#7147E8"),
+                color=alt.value(Style.primaryColor),
             )
             .properties(
                 width=650,
@@ -51,21 +62,7 @@ def stars_component():
         star_monthly.metric("Last month inc.", last_month, current - last_month)
 
 
-def profile_component():
-    """
-    Show the health % and project description
-    """
-
-    percentage, desc = health_data()
-
-    with st.container():
-
-        health_col, desc_col = st.columns(2)
-        health_col.metric("Health %", f"{percentage}%")
-        desc_col.info(desc)
-
-
-def good_first_issues():
+def good_first_issues_component():
     """
     Present the good first issues
     """
@@ -87,8 +84,95 @@ def clear_cache_button():
 
     with st.container():
 
-        desc, button = st.columns(2)
-        desc.write("Clear the cache to refresh the data. It may take a few seconds.")
+        st.write("Clear the cache to refresh the data. It may take a few seconds.")
 
-        if button.button("Clear cache"):
+        if st.button("Clear cache"):
             st.experimental_memo.clear()
+
+
+def contributors_component():
+    """
+    Draw contributors data
+    """
+
+    contributors = contributors_data()
+
+    recurrent_contributors = contributors.loc[contributors["contributions"] >= 3]
+
+    with st.container():
+        st.subheader("Contributors")
+
+        line_chart = (
+            alt.Chart(
+                contributors[:10],
+                title="Top 10 contributors",
+            )
+            .mark_bar()
+            .encode(
+                x=alt.X(
+                    "login",
+                    axis=None,
+                    sort=alt.EncodingSortField(
+                        field="contributions", op="count", order="descending"
+                    ),
+                ),
+                y=alt.Y("contributions"),
+                color=alt.value(Style.primaryColor),
+            )
+            .properties(
+                width=650,
+                height=350,
+            )
+        )
+
+        st.altair_chart(line_chart)
+
+        total, recurrent = st.columns(2)
+        total.metric("Total contributors", contributors.shape[0])
+        recurrent.metric("Recurrent contributors", recurrent_contributors.shape[0])
+
+
+def traffic_component():
+    """
+    Show clones and project views for the last 14 days
+    """
+
+    clones, views = traffic_data()
+
+    with st.container():
+        st.subheader("Traffic for the last 14 days")
+
+        clones_col, views_col = st.columns(2)
+        clones_col.metric("# Unique Clones", clones)
+        views_col.metric("# Unique Views", views)
+
+
+def profile_component():
+    percentage, desc = health_data()
+
+    st.write(desc)
+    social_component()
+    st.markdown("---")
+    st.metric("Repository Health %", f"{percentage}%")
+
+
+def social_component():
+
+    social = """
+    Come and say hi 👋
+    
+    [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/open-metadata/OpenMetadata)
+    [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://slack.open-metadata.org/)
+    """
+    st.markdown(social)
+
+
+def sidebar():
+
+    with st.sidebar.container():
+        st.image("./assets/openmetadata.png")
+        st.write("\n\n")
+
+        profile_component()
+        st.markdown("---")
+        clear_cache_button()
