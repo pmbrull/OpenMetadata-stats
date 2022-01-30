@@ -5,12 +5,19 @@ components to show on the app
 import altair as alt
 import streamlit as st
 
+from dataclasses import dataclass
+
 from stats.data import (
     contributors_data,
     good_first_issues_data,
     health_data,
     stars_data,
 )
+
+
+@dataclass
+class Style:
+    primaryColor: str = "#7147E8"
 
 
 def stars_component():
@@ -39,7 +46,7 @@ def stars_component():
             .encode(
                 x=alt.X("date:T", axis=alt.Axis(tickCount=12, grid=False)),
                 y="stars:Q",
-                color=alt.value("#7147E8"),
+                color=alt.value(Style.primaryColor),
             )
             .properties(
                 width=650,
@@ -125,7 +132,7 @@ def contributors_component():
                     ),
                 ),
                 y=alt.Y("contributions"),
-                color=alt.value("#7147E8"),
+                color=alt.value(Style.primaryColor),
             )
             .properties(
                 width=650,
