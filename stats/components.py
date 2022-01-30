@@ -102,7 +102,7 @@ def contributors_component():
     with st.container():
         st.subheader("Contributors")
 
-        line_chart = (
+        bars = (
             alt.Chart(
                 contributors[:10],
                 title="Top 10 contributors",
@@ -119,13 +119,23 @@ def contributors_component():
                 y=alt.Y("contributions"),
                 color=alt.value(Style.primaryColor),
             )
-            .properties(
+        )
+
+        text = bars.mark_text(
+            align='center',
+            baseline='middle',
+            fontSize=13,
+            dy=-8  # Nudges text to top so it doesn't appear on top of the bar
+        ).encode(
+                text="contributions:Q",
+            )
+
+        chart = (bars + text).properties(
                 width=650,
                 height=350,
             )
-        )
 
-        st.altair_chart(line_chart)
+        st.altair_chart(chart)
 
         total, recurrent = st.columns(2)
         total.metric("Total contributors", contributors.shape[0])
