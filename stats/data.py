@@ -121,3 +121,15 @@ def contributors_data():
     # df.set_index("index", drop=False, inplace=True)
 
     return df
+
+
+@st.experimental_memo
+def traffic_data():
+    """
+    Cook traffic data and views
+    for the last 14 days
+    """
+    clones = get_all(ROOT / "repos" / OWNER / REPO / "traffic" / "clones").get("uniques")
+    views = get_all(ROOT / "repos" / OWNER / REPO / "traffic" / "views", option="&per=week").get("uniques")
+
+    return clones, views
