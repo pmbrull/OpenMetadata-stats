@@ -5,9 +5,10 @@ import streamlit as st
 
 from stats.components import (
     clear_cache_button,
+    contributors_component,
     good_first_issues_component,
     profile_component,
-    stars_component, contributors_component,
+    stars_component,
 )
 
 

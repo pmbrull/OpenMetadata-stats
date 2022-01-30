@@ -5,7 +5,12 @@ components to show on the app
 import altair as alt
 import streamlit as st
 
-from stats.data import good_first_issues_data, health_data, stars_data, contributors_data
+from stats.data import (
+    contributors_data,
+    good_first_issues_data,
+    health_data,
+    stars_data,
+)
 
 
 def stars_component():
@@ -106,18 +111,26 @@ def contributors_component():
         st.subheader("Contributors")
 
         line_chart = (
-            alt.Chart(contributors[:10], title="Top 10 contributors",
-)
-                .mark_bar()
-                .encode(
-                    x=alt.X("login", axis=None, sort=alt.EncodingSortField(field="contributions", op="count", order='descending')),
-                    y=alt.Y("contributions"),
-                    color=alt.value("#7147E8"),
-                )
-                    .properties(
-                    width=650,
-                    height=350,
-                )
+            alt.Chart(
+                contributors[:10],
+                title="Top 10 contributors",
+            )
+            .mark_bar()
+            .encode(
+                x=alt.X(
+                    "login",
+                    axis=None,
+                    sort=alt.EncodingSortField(
+                        field="contributions", op="count", order="descending"
+                    ),
+                ),
+                y=alt.Y("contributions"),
+                color=alt.value("#7147E8"),
+            )
+            .properties(
+                width=650,
+                height=350,
+            )
         )
 
         st.altair_chart(line_chart)
