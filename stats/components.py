@@ -5,7 +5,7 @@ components to show on the app
 import altair as alt
 import streamlit as st
 
-from stats.data import good_first_issues_data, health_data, stars_data
+from stats.data import good_first_issues_data, health_data, stars_data, contributors_data
 
 
 def stars_component():
@@ -27,8 +27,7 @@ def stars_component():
     with st.container():
 
         st.subheader("Stars evolution")
-        # st.line_chart(df)
-        print(df)
+
         line_chart = (
             alt.Chart(df)
             .mark_line()
@@ -65,7 +64,7 @@ def profile_component():
         desc_col.info(desc)
 
 
-def good_first_issues():
+def good_first_issues_component():
     """
     Present the good first issues
     """
@@ -92,3 +91,37 @@ def clear_cache_button():
 
         if button.button("Clear cache"):
             st.experimental_memo.clear()
+
+
+def contributors_component():
+    """
+    Draw contributors data
+    """
+
+    contributors = contributors_data()
+
+    recurrent_contributors = contributors.loc[contributors["contributions"] >= 3]
+
+    with st.container():
+        st.subheader("Contributors")
+
+        line_chart = (
+            alt.Chart(contributors[:10], title="Top 10 contributors",
+)
+                .mark_bar()
+                .encode(
+                    x=alt.X("login", axis=None, sort=alt.EncodingSortField(field="contributions", op="count", order='descending')),
+                    y=alt.Y("contributions"),
+                    color=alt.value("#7147E8"),
+                )
+                    .properties(
+                    width=650,
+                    height=350,
+                )
+        )
+
+        st.altair_chart(line_chart)
+
+        total, recurrent = st.columns(2)
+        total.metric("Total contributors", contributors.shape[0])
+        recurrent.metric("Recurrent contributors", recurrent_contributors.shape[0])

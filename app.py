@@ -5,9 +5,9 @@ import streamlit as st
 
 from stats.components import (
     clear_cache_button,
-    good_first_issues,
+    good_first_issues_component,
     profile_component,
-    stars_component,
+    stars_component, contributors_component,
 )
 
 
@@ -17,13 +17,12 @@ def stats():
     st.markdown("---")
     stars_component()
     st.markdown("---")
-    good_first_issues()
+    good_first_issues_component()
+    st.markdown("---")
+    contributors_component()
     st.markdown("---")
     clear_cache_button()
 
 
 if __name__ == "__main__":
     stats()
-
-# TODO: Auth and pass secrets to the app to increase the API rate limit
-# https://blog.streamlit.io/secrets-in-sharing-apps/
