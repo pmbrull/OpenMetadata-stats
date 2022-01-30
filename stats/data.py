@@ -4,15 +4,14 @@ the components
 """
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Tuple, Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
+import streamlit as st
 from dateutil import parser
 from pandas import DataFrame
 
-import streamlit as st
-
-from stats.client import START_DATE, get_all, OWNER, REPO, ROOT, get
+from stats.client import OWNER, REPO, ROOT, START_DATE, get, get_all
 
 
 @st.experimental_memo
@@ -73,9 +72,11 @@ def is_good_first_issue(issue: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]
 
         is_gfi = next(
             iter(
-                label for label in issue.get("labels") if isinstance(label, dict) and label.get("name") == "good first issue"
+                label
+                for label in issue.get("labels")
+                if isinstance(label, dict) and label.get("name") == "good first issue"
             ),
-            None
+            None,
         )
 
         return is_gfi
@@ -92,9 +93,7 @@ def good_first_issues_data() -> Tuple[List[dict], List[dict]]:
 
     open_issues = get_all(ROOT / "repos" / OWNER / REPO / "issues")
 
-    open_first_issues = [
-        issue for issue in open_issues if is_good_first_issue(issue)
-    ]
+    open_first_issues = [issue for issue in open_issues if is_good_first_issue(issue)]
 
     closed_issues = get_all(ROOT / "repos" / OWNER / REPO / "issues", "&state=closed")
 

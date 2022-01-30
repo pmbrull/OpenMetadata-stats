@@ -2,10 +2,10 @@
 Module creating the different streamlit
 components to show on the app
 """
-import streamlit as st
 import altair as alt
+import streamlit as st
 
-from stats.data import stars_data, health_data, good_first_issues_data
+from stats.data import good_first_issues_data, health_data, stars_data
 
 
 def stars_component():
@@ -29,13 +29,18 @@ def stars_component():
         st.subheader("Stars evolution")
         # st.line_chart(df)
         print(df)
-        line_chart = alt.Chart(df).mark_line().encode(
-            x=alt.X('date:T', axis=alt.Axis(tickCount=12, grid=False)),
-            y="stars:Q",
-            color=alt.value("#7147E8")
-        ).properties(
-            width=650,
-            height=350,
+        line_chart = (
+            alt.Chart(df)
+            .mark_line()
+            .encode(
+                x=alt.X("date:T", axis=alt.Axis(tickCount=12, grid=False)),
+                y="stars:Q",
+                color=alt.value("#7147E8"),
+            )
+            .properties(
+                width=650,
+                height=350,
+            )
         )
 
         st.altair_chart(line_chart)

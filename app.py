@@ -3,7 +3,12 @@ Main file to run the streamlit app
 """
 import streamlit as st
 
-from stats.components import stars_component, profile_component, good_first_issues, clear_cache_button
+from stats.components import (
+    clear_cache_button,
+    good_first_issues,
+    profile_component,
+    stars_component,
+)
 
 
 def stats():
