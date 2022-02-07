@@ -1,1 +1,1 @@
-openstats==0.1.7
+openstats==0.1.8
